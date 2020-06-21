@@ -10,15 +10,6 @@ namespace First_Project
             char buchstabe2 = 'a';
             Console.WriteLine((char)(buchstabe1 + buchstabe2));*/
 
-
-            Console.WriteLine("Ich würde gerne dein Namen und dein Alter wissen.\n");
-
-            Console.Write("Name:\t");
-            string name = Console.ReadLine();
-
-            Console.Write("Alter:\t");
-            string alter = Console.ReadLine();
-
             //Alternative
             /*foreach (var item in alter)
             {
@@ -30,25 +21,32 @@ namespace First_Project
                 }
             }*/
 
-            if (Byte.TryParse(alter, out byte result))
+            Console.WriteLine("Ich würde gerne dein Namen und dein Alter wissen.\n");
+
+            Console.Write("Name:\t");
+            string name = Console.ReadLine();
+
+            Console.Write("Alter:\t");
+
+            bool wartetAufNutzereingabe = true;
+
+            do
             {
-                //Hier kommt man rein wenn es erfolgreich convertiert wurde..
-                Console.WriteLine($"\nDein name ist {name}.");
-                Console.WriteLine("Du bist " + result + " Jahre alt.");
+                string alter = Console.ReadLine();
 
-                /*Console.WriteLine(String.Format("Du bist {0} Jahre alt. {0} {0}", result));
-
-                Console.WriteLine($"Variable Alter Typ: {alter.GetType().Name}\nVariable result Typ: {result.GetType().Name}");
-
-                Console.WriteLine(String.Format("Variable Alter Typ: {0}\nVariable result Ty p: {1}", alter.GetType().Name, result.GetType().Name));
-
-                .WriteLine("Variable Alter Typ: " + alter.GetType().Name + "\nVariable result Typ: " + result.GetType().Name);*/
-            }
-            else
-            {
-                //Falls was schiefgelaufen ist....
-                Console.WriteLine("Leider lief etwas schief... " + alter);
-            }
+                if (Byte.TryParse(alter, out byte result))
+                {
+                    Console.WriteLine($"\nDein name ist {name}.");
+                    Console.WriteLine("Du bist " + result + " Jahre alt.");
+                    wartetAufNutzereingabe = false;
+                }
+                else
+                {
+                    Console.WriteLine("Leider lief etwas schief... " + alter + "\n");
+                    Console.WriteLine("Bitte gib dein alter in Zahlen ein!");
+                    Console.Write("Alter:\t");
+                }
+            } while (wartetAufNutzereingabe);
         }
     }
 }
