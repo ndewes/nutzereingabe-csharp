@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
@@ -7,6 +8,8 @@ namespace First_Project
 {
     class Program
     {
+        private static Dictionary<string, string> dictionary = new Dictionary<string, string>() { };
+
         static void Main(string[] args)
         {
             Console.WriteLine("Ich würde gerne dein Namen und dein Alter wissen.\n");
@@ -35,81 +38,63 @@ namespace First_Project
                     Console.Write("Alter:\t");
                 }
             } while (wartetAufNutzereingabe);
+            AbfrageNachInput("Würdest du mir deine Adresse verraten? [Ja/Nein]\n");
 
-            var dictionary = new Dictionary<string, string>(){};
 
-            void adresse()
+        }
+
+        public static void AbfrageNachInput(string frage)
+        {
+            Console.Write(frage);
+            string userInput = Console.ReadLine();
+
+            if (userInput.ToLower() == "ja")
             {
-                Console.Write("Würdest du mir deine Adresse verraten? [Ja/Nein]\n");
-                string userInput = Console.ReadLine();
-                if (userInput == "Ja" || userInput == "ja")
-                {
-                    //Weiter mit der Adresse
-                    Console.Write("\nStraße: ");
-                    dictionary.Add("Straße", Console.ReadLine());
-
-                    Console.Write("Hausnummer: ");
-                    hausnummer();
-
-                }
-                else if (userInput == "Nein" || userInput == "nein")
-                {
-                    Console.WriteLine("Dann ein anderes mal...");
-                }
-                else
-                {
-                    Console.WriteLine("Du hast eine falsche Eingabe getätigt.");
-                    adresse();
-                }
+                //Weiter mit der Adresse
+                GetInput("In welcher Straße wohnst du: ", "Straße");
+                GetInputZahlen("Welche Hausnummer hast du: ", "Hausnummer");
+                GetInputZahlen("Welche PLZ hat dein Ort: ", "PLZ");
+                GetInput("In welchem Ort wohnst du: ", "Ort");
+                Console.WriteLine("Fertig! Ergebins:");
+                GetErgebnis();
+                return;
+            }
+            else if (userInput.ToLower() == "nein")
+            {
+                Console.WriteLine("Dann ein anderes mal...");
+                return;
             }
 
-            void hausnummer()
-            {
-                string hausnummer = Console.ReadLine();
+            Console.WriteLine("Du hast eine falsche Eingabe getätigt.\nBitte Taste drücken...");
+            Console.ReadKey();
+            Console.Clear();
+            AbfrageNachInput(frage);
+        }
 
-                if (Byte.TryParse(hausnummer, out byte hn))
-                {
-                    dictionary.Add("Hausnummer", hausnummer);
-                    Console.Write("Postleitzahl: ");
-                    postleitzahl();
-                }
-                else
-                {
-                    Console.WriteLine("Leider ist etwas schief gelaufen... " + hausnummer);
-                    Console.WriteLine("Bitte gib deine Hausnummer in Zahlen ein!");
-                    Console.Write("Hausnummer:\t");
-                }
+        private static void GetErgebnis()
+        {
+            foreach (var item in dictionary)
+            {
+                Console.WriteLine($"Du wohnst in {item.Key}: {item.Value}");
             }
+        }
 
-            void postleitzahl()
+        public static void GetInput(string frage, string dictionarytitel)
+        {
+            Console.Write(frage);
+            var input = Console.ReadLine();
+            dictionary.Add(dictionarytitel, input);
+        }
+
+        public static void GetInputZahlen(string frage, string dictionarytitel)
+        {
+            Console.Write(frage);
+            var input = Console.ReadLine();
+
+            if (!int.TryParse(input, out int result)) GetInputZahlen(frage, dictionarytitel);
+            else
             {
-                string postleitzahl = Console.ReadLine();
-
-                if (int.TryParse(postleitzahl, out int plz))
-                {
-                    dictionary.Add("Postleitzahl", postleitzahl);
-                    Console.Write("Ort: ");
-                    ort();
-                }
-                else
-                {
-                    Console.WriteLine("Leider ist etwas schief gelaufen... " + postleitzahl);
-                    Console.WriteLine("Bitte gib deine Postleitzahl in Zahlen ein!");
-                    Console.Write("Postleitzahl:\t");
-                }
-            }
-            void ort()
-            {
-                dictionary.Add("Ort", Console.ReadLine());
-            }
-
-            adresse();
-
-            Console.WriteLine("\nDeine Adresse lautet: " );
-
-            foreach(var adressTeil in dictionary)
-            {
-                Console.WriteLine(adressTeil.Value);
+                dictionary.Add(dictionarytitel, input);
             }
         }
     }
